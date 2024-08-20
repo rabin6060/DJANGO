@@ -10,7 +10,11 @@ def index(request):
     return render(request,'index.html')
 
 def tweet_list(request):
-   tweets =  Tweet.objects.all().order_by('-created_at')
+   searchParams = request.GET.get('q')
+   if searchParams:
+    tweets = Tweet.objects.filter(text__icontains = searchParams) 
+   else:  
+    tweets =  Tweet.objects.all().order_by('-created_at')
    return render(request,'tweet_list.html',{'tweets':tweets})
 
 @login_required
@@ -61,4 +65,6 @@ def register(request):
     else:
         form = UserRegistrationForm()
     return render(request,'registration/register.html',{'form':form})
+
+
 
